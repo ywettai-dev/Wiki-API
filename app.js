@@ -12,6 +12,9 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
+//setup express static link
+app.use(express.static('public/'));
+
 //establish database connection
 mongoose.connect("mongodb://localhost:27017/wikiDB", {
     useNewUrlParser: true
