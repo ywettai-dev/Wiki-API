@@ -24,3 +24,17 @@ mongoose.set('useFindAndModify', false);
 
 //express server
 app.listen(process.env.PORT || port, () => console.log(`Wiki API starts on ${port}`));
+
+//setup article schema and article model
+const articleSchema = {
+    title: {
+        type: String,
+        required: true
+    },
+    content: {
+        type: String,
+        required: true
+    }
+};
+
+const Article = mongoose.model("Article", articleSchema);
