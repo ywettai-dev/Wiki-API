@@ -93,6 +93,8 @@ app.route('/articles/:articleTitle')
                 } else {
                     res.send(`No article with "${req.params.article}" could be found!`);
                 }
+            } else {
+                res.send(err);
             }
         });
     })
@@ -106,6 +108,8 @@ app.route('/articles/:articleTitle')
         }, (err) => {
             if (!err) {
                 res.send(`Successfully updated the article.`);
+            } else {
+                res.send(err);
             }
         });
     })
@@ -117,7 +121,21 @@ app.route('/articles/:articleTitle')
             $set: req.body
         }, (err) => {
             if (!err) {
-                res.send(`Successfully updated the article`);
+                res.send(`Successfully updated the article.`);
+            } else {
+                res.send(err);
             }
         });
+    })
+
+    .delete((req, res) => {
+        Article.deleteOne({
+            title: req.params.articleTitle
+        }, (err) => {
+            if (!err) {
+                res.send(`Successfully deleted the article.`);
+            } else {
+                res.send(err);
+            }
+        })
     });
