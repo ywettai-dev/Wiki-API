@@ -63,7 +63,7 @@ app.route('/articles')
 
         article.save((err) => {
             if (!err) {
-                res.send(`Successfully created a new article`);
+                res.send(`Successfully created a new article.`);
             } else {
                 res.send(err);
             }
@@ -73,7 +73,7 @@ app.route('/articles')
     .delete((req, res) => {
         Article.deleteMany((err) => {
             if (!err) {
-                res.send(`Successfully deleted all articles`);
+                res.send(`Successfully deleted all articles.`);
             } else {
                 res.send(err);
             }
@@ -84,17 +84,40 @@ app.route('/articles')
 app.route('/articles/:articleTitle')
 
     .get((req, res) => {
-        const articleTitle = req.params.articleTitle;
-
         Article.findOne({
-            title: articleTitle
+            title: req.params.articleTitle
         }, (err, foundArticle) => {
             if (!err) {
                 if (foundArticle) {
                     res.send(foundArticle);
                 } else {
-                    res.send(`No article with "${articleTitle}" could be found!`);
+                    res.send(`No article with "${req.params.article}" could be found!`);
                 }
+            }
+        });
+    })
+
+    .put((req, res) => {
+        Article.updateOne({
+            title: req.params.articleTitle
+        }, {
+            title: req.body.title,
+            content: req.body.content
+        }, (err) => {
+            if (!err) {
+                res.send(`Successfully updated the article.`);
+            }
+        });
+    })
+
+    .patch((req, res) => {
+        Article.updateOne({
+            title: req.params.articleTitle
+        }, {
+            $set: req.body
+        }, (err) => {
+            if (!err) {
+                res.send(`Successfully updated the article`);
             }
         });
     });
