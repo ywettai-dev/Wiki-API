@@ -39,32 +39,62 @@ const articleSchema = {
 
 const Article = mongoose.model("Article", articleSchema);
 
-app.get('/articles', (req, res) => {
-    Article.find({}, (err, foundArticles) => {
-        if (!err) {
-            res.send(foundArticles);
-        } else {
-            res.send(err);
-        }
+//Getting All Articles 
+app.route('/articles')
+
+    .get((req, res) => {
+        Article.find({}, (err, foundArticles) => {
+            if (!err) {
+                res.send(foundArticles);
+            } else {
+                res.send(err);
+            }
+        });
+    })
+
+    .post((req, res) => {
+        const articleTitle = req.body.title;
+        const articleContent = req.body.content;
+
+        const article = new Article({
+            title: articleTitle,
+            content: articleContent
+        });
+
+        article.save((err) => {
+            if (!err) {
+                res.send(`Successfully created a new article`);
+            } else {
+                res.send(err);
+            }
+        });
+    })
+
+    .delete((req, res) => {
+        Article.deleteMany((err) => {
+            if (!err) {
+                res.send(`Successfully deleted all articles`);
+            } else {
+                res.send(err);
+            }
+        });
     });
-});
 
-app.post('/articles', (req, res) => {
-    const articleTitle = req.body.title;
-    const articleContent = req.body.content;
+//Getting Specific Article
+app.route('/articles/:articleTitle')
 
-    const article = new Article({
-        title: articleTitle,
-        content: articleContent
+    .get((req, res) => {
+        const articleTitle = req.params.articleTitle;
+
+        Article.findOne({
+            title: articleTitle
+        }, (err, foundArticle) => {
+            if (!err) {
+                if (foundArticle) {
+                    res.send(foundArticle);
+                } else {
+                    res.send(`No article with "${articleTitle}" could be found!`);
+                }
+            }
+        });
     });
-
-    article.save((err) => {
-        if (!err) {
-            res.send(`Successfully created a new article`);
-        } else {
-            res.send(err);
-        }
-    });
-
-
-});
